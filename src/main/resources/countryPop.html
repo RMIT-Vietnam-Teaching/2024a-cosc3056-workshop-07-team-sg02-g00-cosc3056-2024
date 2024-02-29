@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <title>Find Population By City</title>
+
+   <link rel="stylesheet" type="text/css" href="common.css" />
+</head>
+<body>
+   <div class='topnav'>
+      <a href='/'>Homepage</a>
+      <a href='/countryPop'>Find Population By City</a>
+   </div>
+   
+   <div class='header'>
+      <h1 th:text="${title}"></h1>
+   </div>
+
+   <div class='content'>
+
+      <form id="submitCountryForm" action="/countryPop" method="POST">
+
+         <!-- 
+            Display all countries from the database 
+            Set the default selected value as the previously selected country
+         -->
+         <select name="targetCountry" id="targetCountry">
+         
+            <option th:each = "country: ${countries}" 
+                    th:text = "${country.name}" 
+                    th:value = "${country.code}" 
+                    th:selected = "${country.code == selectedCountry}">
+            </option>
+
+         </select>
+
+         <input type="submit" value="Select Country"/>
+      </form>
+
+      <div th:if = "${selectedCountry} != null">
+         <!-- 
+            Fill in the attributes of the Form to send 
+              the selected city to the server
+              using the POST method.
+         -->
+         <form action="/countryPop" method="POST" >
+
+            <select name="targetCity" id="targetCity">
+
+               <option  th:each = "city: ${cities}" 
+                        th:text = "${city.name}" 
+                        th:value = "${city.name} + '|' + ${city.population}">
+               </option>
+
+            </select>
+
+            <input type="submit" value="Get Population"/>
+         </form>
+      </div>
+
+      <!--  
+         Display the population of a city
+      -->
+
+      <h3 id="cityPopulationResult"
+         th:if = "${selectedCountry} != null"
+         th:text = "|Population of [CityName] is [Population] people|">
+      </h3>
+
+   </div>
+
+   <div class='footer'>
+      <p>COSC3056 Workshop Thymeleaf II</p>
+   </div>
+</body>
+</html>
